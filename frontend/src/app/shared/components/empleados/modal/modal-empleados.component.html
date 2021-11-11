@@ -1,0 +1,80 @@
+<form [formGroup]="data.form" 
+(ngSubmit)="submit()">
+
+
+<h1 mat-dialog-title>
+    {{data.view === 'CREATE' ? 'Nuevo Empleado' : 'Editar Empleado'}}
+</h1>
+<div mat-dialog-content>
+
+
+    <div class="d-flex justify-content-center my-5" *ngIf="loading">
+        <mat-spinner></mat-spinner>
+    </div>
+
+    <div class="row" *ngIf="(data.view === 'CREATE' || data.view === 'UPDATE') && !loading">
+        <div class="col-12 text-center">
+
+                <div class="row">
+                    <div class="col-6">
+                        <mat-form-field class="w-100" appearance="fill">
+                            <mat-label>Nombre</mat-label>
+                            <input matInput placeholder="Ej. Juan" formControlName="name">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-6">
+                        <mat-form-field class="w-100" appearance="fill">
+                            <mat-label>Apellido</mat-label>
+                            <input matInput placeholder="Ej. Perez" formControlName="last_name">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-6">
+                        <mat-form-field appearance="fill">
+                        <mat-label>Cargo</mat-label>
+                        <mat-select formControlName="position">
+                            <mat-option value="barbero">Barbero</mat-option>
+                            <mat-option value="cajero">Cajero</mat-option>
+                        </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-6">
+                        <mat-form-field class="w-100" appearance="fill">
+                            <mat-label>Identificación</mat-label>
+                            <input matInput placeholder="Ej. 1040851792" type="number"
+                                formControlName="identification">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-6">
+                        <mat-form-field class="w-100" appearance="fill">
+                            <mat-label>Correo Electrónico</mat-label>
+                            <input matInput placeholder="Ej. juan@gmail.com" type="email" formControlName="email">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-6">
+                        <mat-form-field class="w-100" appearance="fill">
+                            <mat-label>Teléfono</mat-label>
+                            <input matInput placeholder="Ej. 3158544010" type="number" formControlName="phone">
+                        </mat-form-field>
+                    </div>
+                </div>
+        </div>
+    </div>
+    
+
+</div>
+
+<div mat-dialog-actions>
+
+    <button type="button" mat-raised-button color="secondary"
+            id="closeButton" (click)="onNoClick()">Salir</button>
+        &nbsp;
+        <button mat-raised-button [disabled]="data.form.invalid || loading"
+                                color="primary" type="submit"
+                                *ngIf="data.view === 'CREATE'">Crear</button>
+        <button mat-raised-button [disabled]="data.form.invalid || loading"
+                                color="primary" type="submit"
+                                *ngIf="data.view === 'UPDATE'">Actualizar</button>
+    
+</div>
+
+</form>

@@ -1,0 +1,90 @@
+<mat-toolbar class="mat-elevation-z8">
+    <button mat-icon-button *ngIf="sidenav.mode === 'over'" (click)="sidenav.toggle()">
+        <mat-icon *ngIf="!sidenav.opened">
+            menu
+        </mat-icon>
+        <mat-icon *ngIf="sidenav.opened">
+            close
+        </mat-icon>
+    </button>
+    <span class="px-2">
+        OG23BARBER
+    </span>
+    <button class="pe-3 ms-auto btn btn-danger" (click)="logout()">
+        Cerrar Sesión
+    </button>
+</mat-toolbar>
+
+<mat-sidenav-container>
+    <mat-sidenav #sidenav="matSidenav" class="mat-elevation-z8">
+
+        <button mat-button class="menu-button" routerLink="/dashboard">
+            <mat-icon>home</mat-icon>
+            <span>Inicio</span>
+        </button>
+        
+        <mat-divider></mat-divider>
+
+        <button mat-button class="menu-button">
+            <mat-icon>point_of_sale</mat-icon>
+            <span>Caja</span>
+        </button>
+        
+        <button mat-button class="menu-button" routerLink="/empleados">
+            <mat-icon>group</mat-icon>
+            <span>Empleados</span>
+        </button>
+
+        <button mat-button class="menu-button" routerLink="/servicios">
+            <mat-icon>content_cut</mat-icon>
+            <span>Servicios</span>
+        </button>
+
+        <button mat-button class="menu-button" routerLink="/inventario">
+            <mat-icon>assignment</mat-icon>
+            <span>Inventario</span>
+        </button>
+
+        <button mat-button class="menu-button" routerLink="/facturacion">
+            <mat-icon>monetization_on</mat-icon>
+            <span>Facturacion</span>
+        </button>
+
+        <button mat-button class="menu-button" routerLink="/clientes">
+            <mat-icon>groups</mat-icon>
+            <span>Clientes</span>
+        </button>
+
+        <button mat-button class="menu-button">
+            <mat-icon>local_activity</mat-icon>
+            <span>Promociones</span>
+        </button>
+
+        <button mat-button class="menu-button">
+            <mat-icon>calculate</mat-icon>
+            <span>Gastos</span>
+        </button>
+
+        <button mat-button class="menu-button">
+            <mat-icon>qr_code_2</mat-icon>
+            <span>Códigos QR</span>
+        </button>
+
+        <button mat-button class="menu-button">
+            <mat-icon>bar_chart</mat-icon>
+            <span>Estadisticas</span>
+        </button>
+
+        <button mat-button class="menu-button">
+            <mat-icon>settings</mat-icon>
+            <span>Ajustes</span>
+        </button>
+
+
+    </mat-sidenav>
+    <mat-sidenav-content>
+        <div class="content">
+            <router-outlet></router-outlet>
+        </div>
+    </mat-sidenav-content>
+</mat-sidenav-container>

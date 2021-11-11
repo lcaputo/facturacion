@@ -1,0 +1,52 @@
+version: "2.1"
+
+services:
+  # POSTGRESQL DB
+  postgres:
+    container_name: postgres_facturacion
+    image: postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: og23barber
+      POSTGRES_USER: ${DB_USERNAME:-admin}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-password}
+    volumes:
+       - ./data/postgres:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - app-network
+
+  # DJANGO
+  django:
+    container_name: django_facturacion
+    restart: always
+    build:
+      context: ./backend/
+      dockerfile: Dockerfile
+    depends_on:
+      - "postgres"
+    environment:
+      #DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY}
+      #JWT_SIGNING_KEY: ${JWT_SIGNING_KEY}
+      #JWT_VERIFYING_KEY: ${JWT_VERIFYING_KEY}
+      DB_HOST: postgres
+      DB_NAME: ${DB_NAME:-admin}
+      DB_PASSWORD: ${DB_PASSWORD:-password}
+      #VIRTUAL_HOST: facturacion.og23barder.co
+      #LETSENCRYPT_HOST: facturacion.og23barber.co,
+      #LETSENCRYPT_EMAIL: admin@og23barber.co
+      SELENIUM_DRIVER_URL: selenium-hub
+    volumes:
+      - .:/application
+    command: >
+      sh ./backend/entrypoint.sh
+    ports:
+      - "8000:8000"
+    networks:
+      - app-network
+
+# NETWORKS
+networks:
+  app-network:
+    driver: bridge
