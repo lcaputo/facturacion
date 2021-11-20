@@ -17,6 +17,7 @@ urlpatterns = [
     path('api/v1/employee/', include('apps.employees.api.urls'), name='employee_api_views'),
     path('api/v1/service/', include('apps.services.api.urls'), name='service_api_views'),
     path('api/v1/client/', include('apps.clients.api.urls'), name='client_api_views'),
+    path('api/v1/expenses/', include('apps.expenses.api.urls'), name='expenses_api_views'),
     path('api/v1/product/', include('apps.products.api.urls'), name='product_api_views'),
     path('api/v1/bill/', include('apps.bills.api.urls'), name='bill_api_views'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

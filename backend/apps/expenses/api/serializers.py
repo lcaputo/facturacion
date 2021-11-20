@@ -1,9 +1,8 @@
 from rest_framework import serializers
-from apps.clients.models import Client as Model
+from apps.expenses.models import Expenses as Model
 
 
-class ClientSerializer(serializers.ModelSerializer):
-
+class ExpensesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Model
         fields = '__all__'

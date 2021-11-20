@@ -1,3 +1,4 @@
+@import "~@ng-select/ng-select/themes/material.theme.css";
 /* You can add global styles to this file, and also import other style files */
 
 html,
@@ -13,3 +14,23 @@ body {
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
+
+.ng-select-container {
+  background-color: rgba(0,0,0,.04);
+}
+
+.ng-select-container .ng-value {
+  margin-top: 4%;
+}
+
+.ng-select-container .ng-value-container {
+  margin-left: 6%; 
+}
+
+.ng-select-container .ng-value-container div input {
+  padding: 0% 6% !important;
+}
+
+.ng-select-container .ng-placeholder {
+  margin-top: 3%;
+}

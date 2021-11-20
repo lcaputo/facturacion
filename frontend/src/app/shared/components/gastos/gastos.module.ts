@@ -9,13 +9,12 @@ import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatTableModule} from '@angular/material/table';
 import {MatSortModule} from '@angular/material/sort';
-import { MatFormFieldModule, MatLabel } from '@angular/material/form-field';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { ModalFacturacionComponent } from './modal/modal-facturacion.component';
+import { GastosComponent } from './gastos.component';
 
 @NgModule({
   declarations: [
-    ModalFacturacionComponent,
   ],
   imports: [
     CommonModule,
@@ -30,8 +29,7 @@ import { ModalFacturacionComponent } from './modal/modal-facturacion.component';
     MatFormFieldModule,
     FormsModule,
     ReactiveFormsModule,
-    MatInputModule,
-    MatLabel,
+    MatInputModule
   ]
 })
-export class FacturacionModule { }
+export class GastosModule { }

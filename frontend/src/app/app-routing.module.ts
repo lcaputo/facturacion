@@ -11,6 +11,7 @@ import { EmpleadosComponent } from './shared/components/empleados/empleados.comp
 import { ServiciosComponent } from './shared/components/servicios/servicios.component';
 import { ClientesComponent } from './shared/components/clientes/clientes.component';
 import { InventarioComponent } from './shared/components/inventario/inventario.component';
+import { GastosComponent } from './shared/components/gastos/gastos.component';
 
 
 const routes: Routes = [
@@ -53,6 +54,11 @@ const routes: Routes = [
       { 
         path: 'facturacion',
         component: FacturacionComponent,
+        canActivate: [AuthGuardService] 
+      },
+      { 
+        path: 'gastos',
+        component: GastosComponent,
         canActivate: [AuthGuardService] 
       },
     ]

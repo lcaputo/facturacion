@@ -83,7 +83,7 @@ export class ServiciosComponent implements OnInit, AfterViewInit {
 
   delete(id: number, name: string) {
     swal.fire({
-      icon: 'question',
+      icon: 'warning',
       title: `Desea borrar el servicio #${id} ${name} ?`,
       showConfirmButton: false,
       showDenyButton: true,

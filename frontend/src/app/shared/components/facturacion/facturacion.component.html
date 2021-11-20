@@ -1,364 +1,78 @@
-<!-- BOTON FLOTANTE ESQUINA INFERIOR DERECHA -->
-<button mat-fab class="float" *ngIf="loadingBills" [disabled]="loadingBills">
-    <mat-icon>hourglass_bottom</mat-icon>
-</button>
-<button mat-fab class="float btn-custom-color" data-bs-target="#createModal" data-bs-toggle="modal"
-    *ngIf="!loadingBills" (click)="view = ''; products && products.length > 0 ? false : listProducts();">
-    <mat-icon>add</mat-icon>
-</button>
+<mat-tab-group animationDuration="0ms">
+    <mat-tab label="Facturacion">
+        
+        <!-- BOTON FLOTANTE ESQUINA INFERIOR DERECHA -->
+        <button mat-fab class="float" *ngIf="loading" [disabled]="loading">
+            <mat-icon>hourglass_bottom</mat-icon>
+        </button>
+        <button mat-fab class="float btn-custom-color"
+            *ngIf="!loading" (click)="view = 'CREATE'; bills && bills.length > 0 ? false : list();form.reset();openDialog()">
+            <mat-icon>add</mat-icon>
+        </button>
 
 
 
-        <!-- BUSCAR PALABRAS CLAVE DENTRO DE LA TABLA DE FACTURACIÓN -->
         <mat-form-field class="w-100" appearance="fill">
             <mat-label>Buscar</mat-label>
-            <input matInput placeholder="Por Nombres o Documento" name="billSearch" [(ngModel)]="billSearch"
-                (keyup)="billSearchFilter($event)">
+            <input matInput placeholder="Por Nombres o Documento" name="searchFilter" [(ngModel)]="search"
+                (keyup)="searchFilter($event)">
         </mat-form-field>
 
-    <!-- CARGANDO FACTURAS -->
-    <div class="d-flex justify-content-center my-5" *ngIf="loadingBills">
+    <div class="d-flex justify-content-center my-5" *ngIf="loading">
         <mat-spinner></mat-spinner>
     </div>
 
-    <!-- TABLA FACTURAS -->
-    <table mat-table #billTable="matSort" [dataSource]="billDataSource" matSort [ngClass]="{'d-none' : loadingBills}">
 
-        <!-- ID / CONSECUTIVO -->
+    <table mat-table [dataSource]="dataSource" matSort [ngClass]="{'d-none' : loading}">
+
         <ng-container matColumnDef="id">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> No. </th>
             <td mat-cell *matCellDef="let element"> {{element.id}} </td>
         </ng-container>
 
-        <!-- EMPLEADO -->
         <ng-container matColumnDef="employee">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Empleado </th>
-            <td mat-cell *matCellDef="let element"> {{element.employee_id}} </td>
+            <td mat-cell *matCellDef="let element"> {{element.employee.name}} </td>
         </ng-container>
 
-        <!-- CLIENTE -->
         <ng-container matColumnDef="client">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Cliente </th>
-            <td mat-cell *matCellDef="let element"> {{element.client_id}} </td>
+            <td mat-cell *matCellDef="let element"> {{element.client.name}} </td>
         </ng-container>
 
-        <!-- VALOR TOTAL FACTURA -->
-        <ng-container matColumnDef="total">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Valor </th>
-            <td mat-cell *matCellDef="let element"> {{element.total | currency: '$'}} </td>
-        </ng-container>
-
-        <!-- FECHA DE CREACIÓN DE LA FACTURA -->
-        <ng-container matColumnDef="created_at">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de Facturación
-            </th>
-            <td mat-cell *matCellDef="let element"> {{element.created_at | date:
-                'dd/MM/yyyy, h:mm a'}} </td>
+         <ng-container matColumnDef="total">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> total </th>
+            <td mat-cell *matCellDef="let element"> {{element.total}} </td>
         </ng-container>
 
         <!-- ACCIONES -->
         <ng-container matColumnDef="actions">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Acciones </th>
             <td mat-cell *matCellDef="let element">
-                <mat-icon class="text-primary" style="cursor: pointer;" data-bs-toggle="modal"
-                    data-bs-target="#detailModal" (click)="getDetails(element.id);">visibility</mat-icon>
+                <mat-icon class="text-primary" style="cursor: pointer;"
+                    (click)="getDetails(element.id);">edit</mat-icon>
                 &nbsp;
-                <mat-icon class="text-danger" style="cursor: pointer;" (click)="deleteBill(element.id)">delete
+                <mat-icon class="text-danger" style="cursor: pointer;" (click)="delete(element.id, element.name+' '+element.last_name)">delete
                 </mat-icon>
             </td>
         </ng-container>
 
         <!-- CONFIGURACIÓN DE COLUMNAS -->
-        <tr mat-header-row *matHeaderRowDef="displayedBillColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedBillColumns;"></tr>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 
 
     </table>
 
     <!-- PAGINADOR -->
-    <mat-paginator #billPaginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons
-        [ngClass]="{'d-none' : loadingBills}">
+    <mat-paginator #paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons
+        [ngClass]="{'d-none' : loading}">
     </mat-paginator>
 
 
-<!-- MODAL DETALLE DE FACTURA -->
-<div class="modal fade" id="detailModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title">Detalles de la Factura</h3>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body" class="d-flex justify-content-center">
-                <!-- CARGANDO | DETALLES DE FACTURA -->
-                <div class="d-flex justify-content-center my-5" *ngIf="loadingDetails">
-                    <mat-spinner></mat-spinner>
-                </div>
-                <!-- DETALLE FACTURA -->
-                <div class="row d-flex justify-content-center my-4">
-                    <div *ngIf="!loadingDetails">
-                        <!-- EMPLEADO QUE REALIZÓ LA FACTURA (USUARIO LOGEADO EN EL MOMENTO DE FACTURAR) -->
-                        <span class="d-flex">
-                            <b>Empleado a Cargo:</b> <span class="ms-auto">{{billDetail.employee_name}}</span>
-                        </span>
-                        <span class="d-flex">
-                            <b>CC ó NIT:</b> <span class="ms-auto">{{billDetail.employee_document}}</span>
-                        </span>
-                        <hr>
-                        <!-- CLIENTE / COMPRADOR -->
-                        <span class="d-flex">
-                            <b>Cliente:</b> <span class="ms-auto">{{billDetail.client_name}}</span>
-                        </span>
-                        <span class="d-flex">
-                            <b>CC ó NIT:</b> <span class="ms-auto">{{billDetail.client_document}}</span>
-                        </span>
-                        <hr>
-                        <!-- ITEMS FACTURADOS -->
-                        <ul *ngIf="!loadingDetails" class="px-0 py-3">
-                            <li *ngFor="let item of billDetail.products" class="list-group-item text-end d-flex">
-                                <span class="me-auto">{{item.name}}</span> <span>{{item.price | currency: '$'}}</span>
-                            </li>
-                        </ul>
-                        <hr>
-                    </div>
-                    <!-- CALCULAR SUMATORIA DE PRECIOS -->
-                    <div *ngIf="!loadingDetails" class="text-end">
-                        <span class="d-flex">
-                            <b>PRECIO NETO:</b> <span class="ms-auto">{{billDetail.price | currency: '$'}}</span>
-                        </span>
-                        <span class="d-flex">
-                            <b>IVA:</b> <span class="ms-auto">{{billDetail.iva | currency: '$'}}</span>
-                        </span>
-                        <span class="d-flex">
-                            <b>TOTAL:</b> <span class="ms-auto">{{billDetail.total | currency: '$'}}</span>
-                        </span>
-                    </div>
-                </div>
-            </div>
-            <!-- BOTON CERRAR DETALLES DE FACTURA -->
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- MODAL CREAR Y EDITAR FACTURA / PRODUCTOS -->
-<div class="modal fade" [ngClass]="{'large': view === ''}" id="createModal" tabindex="-1"
-aria-labelledby="createModal" aria-hidden="true">
-<form>
-
-<div class="modal-dialog">
-    <div class="modal-content">
-        <div class="modal-header">
-            <mat-icon *ngIf="view !== ''" (click)="view = ''" style="cursor: pointer;">arrow_back</mat-icon>
-            <h2 class="modal-title bold mb-0 ps-3" *ngIf="view === ''">
-                Generar Factura
-            </h2>
-            <h2 class="modal-title bold mb-0 ps-1" *ngIf="view === 'CREATE_PRODUCT'">
-                Crear Producto
-            </h2>
-            <h2 class="modal-title bold mb-0 ps-1" *ngIf="view === 'UPDATE_PRODUCT'">
-                Actualizar Producto
-            </h2>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-
-        <div class="modal-body">
-            <div class="row m-auto" *ngIf="view == ''">
-                <div class="col-12 col-lg-8">
-                    <div class="row">
-                        <div class="col-10 col-md-11">
-                            <!-- BUSCAR PRODUCTOS POR PALABRA CLAVE -->
-                            <mat-form-field class="w-100" appearance="fill">
-                                <mat-label>Buscar</mat-label>
-                                <input matInput placeholder="Por Nombres o Documento" name="productSearch"
-                                    [(ngModel)]="productSearch" onkeydown="return (event.keyCode!=13);"
-                                    (keyup)="productSearchFilter($event)">
-                            </mat-form-field>
-                        </div>
-                        <!-- CREAR NUEVO PRODUCTO -->
-                        <div class="col-2 col-md-1 px-0 pt-1">
-                            <button mat-mini-fab color="primary" (click)="showCreateProductView()">
-                                <mat-icon>add</mat-icon>
-                            </button>
-                        </div>
-                    </div>
-                    <!-- INSTRUCCIONES DE USO -->
-                    <small class="m-0">
-                        Agrega items al carrito clickeando sobre la tabla. <br>
-                        Retira items del carrito clickeando sobre el elemento del carrito</small>
 
 
-                    <!-- CARGANDO PRODUCTOS -->
-                    <div class="d-flex justify-content-center my-5" *ngIf="loadingProducts">
-                        <mat-spinner></mat-spinner>
-                    </div>
+    </mat-tab>
 
-                    <!-- TABLA PRODUCTOS -->
-                    <table mat-table #productSort="matSort" [dataSource]="productDataSource" matSort
-                        style="width: 98%;" [ngClass]="{'d-none' : loadingProducts}">
-
-                        <!-- ID / CONSECUTIVO -->
-                        <ng-container matColumnDef="id">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header> No. </th>
-                            <td mat-cell *matCellDef="let element"> {{element.id}} </td>
-                        </ng-container>
-                        <!-- NOMBRE DEL PRODUCTO -->
-                        <ng-container matColumnDef="name">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Nombre </th>
-                            <td mat-cell *matCellDef="let element"> {{element.name}} </td>
-                        </ng-container>
-                        <!-- PRECIO DEL PRODUCTO -->
-                        <ng-container matColumnDef="price">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Precio </th>
-                            <td mat-cell *matCellDef="let element"> {{element.price}} </td>
-                        </ng-container>
-                        <!-- ACCIONES -->
-                        <ng-container matColumnDef="actions">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Acciones </th>
-                            <td mat-cell *matCellDef="let element">
-                                <mat-icon class="text-primary" style="cursor: pointer;"
-                                    (click)="editProductView(element.id)">edit</mat-icon>
-                                &nbsp;
-                                <mat-icon class="text-danger" style="cursor: pointer;"
-                                    (click)="deleteProduct(element.id, element.name)">delete</mat-icon>
-                            </td>
-                        </ng-container>
-
-                        <!-- CONFIGURACION DE COLUMNAS -->
-                        <tr mat-header-row *matHeaderRowDef="displayedProductColumns"></tr>
-                        <tr mat-row (click)="clickedProductsRows.add(row)"
-                            [class.demo-row-is-clicked]="clickedProductsRows.has(row)"
-                            *matRowDef="let row; columns: displayedProductColumns;"></tr>
-
-                    </table>
-                    <!-- PAGINADOR -->
-                    <mat-paginator #productPaginator [pageSizeOptions]="[5]" showFirstLastButtons
-                        [ngClass]="{'d-none' : loadingProducts}">
-                    </mat-paginator>
-
-
-                </div>
-
-
-                <div class="col-12 col-lg-4 mt-3 my-lg-1">
-                    <!-- FORMULARIO PARA AGREGAR NEUVO CLIENTE (DENTRO DE LA VENTANA DE FACTURACIÓN) -->
-                    <form [formGroup]="clientForm">
-                        <div>
-                            <b>Datos del Comprador:</b>
-                            <!-- CÉDULA Ó NIT -->
-                            <mat-form-field class="w-100" appearance="fill">
-                                <mat-label>Cédula ó NIT</mat-label>
-                                <input matInput placeholder="Ej. 87425177" type="number" formControlName="CC">
-                            </mat-form-field>
-                            <!-- NOMBRES DEL CLIENTE -->
-                            <mat-form-field class="w-100" appearance="fill">
-                                <mat-label>Nombre</mat-label>
-                                <input matInput placeholder="Ej. Pedro Pérez" formControlName="name">
-                            </mat-form-field>
-                        </div>
-                        <!-- CARRITO DE COMPRAS -->
-                        <b>Carrito:</b>
-                        <hr>
-                        <div style="overflow-y: scroll; height:200px;">
-                            <ul class="list-group">
-                                <!-- ITERACIÓN PARA MOSTRAR ITEM DEL CARRITO -->
-                                <li *ngFor="let clickedRow of clickedProductsRows" class="list-group-item mb-1"
-                                    (click)="clickedProductsRows.delete(clickedRow)">
-                                    <div class="d-flex">
-                                        <span class="me-auto">
-                                            {{clickedRow.name}}
-                                        </span>
-
-                                    </div>
-                                    <!-- LISTAR ITEMS AGREGADOS AL CARRITO -->
-                                    <div>
-                                        Precio: <span class="text-success">${{clickedRow.price}}</span>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-
-                        <div class="mt-2">
-                            <!-- CALCULAR EL PRECIO -->
-                            <b>NETO: {{ sumTotal() | currency: '$' }}</b>
-                            <br>
-                            <!-- AGREGAR IMPUESTO IVA AL SUBTOTAL -->
-                            <b>TOTAL + IVA: {{ sumTotal()+(sumTotal()*0.19) | currency: '$' }}</b>
-                        </div>
-
-                    </form>
-                </div>
-
-
-
-            </div>
-
-            <!-- MODAL PARA AGREGAR PRODUCTOS / ACTUALIZAR -->
-            <div class="row" *ngIf="view === 'CREATE_PRODUCT' || view === 'UPDATE_PRODUCT'">
-                <div class="col-12 text-center">
-
-                    <div class="d-flex justify-content-center my-5" *ngIf="loadingProductForm">
-                        <mat-spinner></mat-spinner>
-                    </div>
-
-                    <form [formGroup]="productForm" *ngIf="!loadingProductForm"
-                        (ngSubmit)="submitProductForm()">
-                        <div class="row px-lg-5">
-                            <div class="col-6">
-                                <mat-form-field class="w-100" appearance="fill">
-                                    <mat-label>Nombre</mat-label>
-                                    <input matInput placeholder="Ej. Pizza" formControlName="name">
-                                </mat-form-field>
-                            </div>
-                            <div class="col-6">
-                                <mat-form-field class="w-100" appearance="fill">
-                                    <mat-label>Precio</mat-label>
-                                    <input matInput placeholder="Ej. 20000" type="number"
-                                        formControlName="price">
-                                </mat-form-field>
-                            </div>
-                            <div class="col-12">
-                                <mat-form-field class="w-100" appearance="fill">
-                                    <mat-label>Descripción</mat-label>
-                                    <textarea matInput placeholder="Ej. Comida..." rows="4"
-                                        formControlName="description"></textarea>
-                                </mat-form-field>
-                            </div>
-                            <div class="col-12">
-                                <button mat-raised-button [disabled]="productForm.invalid || isLoading"
-                                    color="primary" class="w-100" type="submit"
-                                    *ngIf="view === 'CREATE_PRODUCT'">Crear</button>
-                                <button mat-raised-button [disabled]="productForm.invalid || isLoading"
-                                    color="primary" class="w-100" type="submit"
-                                    *ngIf="view === 'UPDATE_PRODUCT'">Actualizar</button>
-                            </div>
-                        </div>
-
-                    </form>
-
-                </div>
-            </div>
-
-
-
-
-        </div>
-
-
-        <div class="modal-footer">
-            <button type="button" mat-raised-button color="secondary" data-bs-dismiss="modal"
-                id="closeButton">Cerrar</button>
-            &nbsp;
-            <!-- METODOS DE FACTURACIÓN -->
-            <button type="submit" mat-raised-button class="bg-success text-light" *ngIf="view === ''"
-                (click)="submitBill()" [disabled]="clientForm.invalid || loadingBills">Facturar</button>
-            <button type="submit" mat-raised-button class="bg-warning" *ngIf="view !== ''"
-                (click)="view = ''">Atrás</button>
-        </div>
-    </div>
-</div>
-</form>
-</div>
+  </mat-tab-group>
 

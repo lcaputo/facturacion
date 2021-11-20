@@ -1,6 +1,6 @@
 from rest_framework import generics
-from apps.bills.models import Bill as Model
-from apps.bills.api.serializers import BillSerializer as Serializer
+from apps.expenses.models import Expenses as Model
+from apps.expenses.api.serializers import ExpensesSerializer as Serializer
 
 
 class ListCreateView(generics.ListCreateAPIView):

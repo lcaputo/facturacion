@@ -42,14 +42,13 @@ export class ModalInventarioComponent implements OnInit {
     return this.options.filter(option => option.name.toLowerCase().includes(filterValue));
   }
 
-  onNoClick(): void {
-    this.dialogRef.close();
-  }
-
   displayFn(obj:any): string{
     return obj && obj.name ? obj.name : '';
   }
 
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
 
   getSuppliers() {
     this.service.get('/product/supplier/').subscribe(

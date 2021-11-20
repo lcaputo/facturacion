@@ -7,36 +7,34 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { AppService } from 'src/app/services/app.service';
 import swal from 'sweetalert2';
 import { MatDialog } from '@angular/material/dialog';
-import { ModalClientesComponent } from './modal/modal-clientes.component';
+import { ModalGastosComponent } from './modal/modal-gastos.component';
 
 
-export interface Client {
+export interface Expense {
   id                        : number;
   name                      : string;
-  last_name                 : string;
-  identification            : number;
-  email                     : string;
-  phone                     : number;
+  description               : string;
+  cost                      : number;
 }
 
 
 @Component({
-  selector: 'app-clientes',
-  templateUrl: './clientes.component.html',
-  styleUrls: ['./clientes.component.scss']
+  selector: 'app-gastos',
+  templateUrl: './gastos.component.html',
+  styleUrls: ['./gastos.component.scss']
 })
-export class ClientesComponent implements OnInit, AfterViewInit {
+export class GastosComponent implements OnInit, AfterViewInit {
 
   public form!              : FormGroup;
   public view               : string = '';
   public loading            : boolean = false;
   public updateId!          : number;
-  public clients            : any = {};
+  public expenses           : any = {};
   public detail             : any = {};
   public search             : string = '';
 
     dataSource = new MatTableDataSource();
-    displayedColumns: string[] = ['id', 'name', 'last_name', 'identification', 'email', 'phone', 'actions'];
+    displayedColumns: string[] = ['id', 'name', 'description', 'cost'];
     @ViewChild('table') sort!: MatSort;
     @ViewChild('paginator') paginator!: MatPaginator;
 
@@ -54,18 +52,11 @@ export class ClientesComponent implements OnInit, AfterViewInit {
       name: ['', [
           Validators.required, 
       ]],
-      last_name: ['', [
+      description: ['', [
         Validators.required, 
       ]],
-      identification: ['', [
-          Validators.required,
-      ]],
-      email: ['', [
-        Validators.required,
-        Validators.email
-      ]],
-      phone: ['', [
-        Validators.required
+      cost: ['', [
+        Validators.required, 
       ]],
     })
   }
@@ -79,16 +70,16 @@ export class ClientesComponent implements OnInit, AfterViewInit {
   
   list() {
     this.loading = true;
-    this.service.get('/client/').subscribe(
+    this.service.get('/expenses/').subscribe(
       (res:any) => {
         console.log(res);
-        this.clients = res;
-        this.dataSource.data = res as Client[];
+        this.expenses = res;
+        this.dataSource.data = res as Expense[];
         this.loading = false;
       },
       (err:any) =>{
         console.log('Error', err)
-        this.openSnackBar('Error al consultar los clientes', 'ok')
+        this.openSnackBar('Error al consultar los gastos', 'ok')
         this.loading = false;
       }
     )
@@ -97,7 +88,7 @@ export class ClientesComponent implements OnInit, AfterViewInit {
   delete(id: number, name: string) {
     swal.fire({
       icon: 'warning',
-      title: `Desea borrar el cliente #${id} ${name} ?`,
+      title: `Desea borrar el gasto #${id} ${name} ?`,
       showConfirmButton: false,
       showDenyButton: true,
       showCancelButton: true,
@@ -105,7 +96,7 @@ export class ClientesComponent implements OnInit, AfterViewInit {
     }).then((result) => {
       if (result.isDenied) {
         this.loading = true;
-        this.service.delete(`/client/delete/${id}/`).subscribe(
+        this.service.delete(`/expenses/delete/${id}/`).subscribe(
           () => {
             this.list()
             swal.fire('Eliminado!', '', 'success')
@@ -120,7 +111,7 @@ export class ClientesComponent implements OnInit, AfterViewInit {
   }
 
   openDialog(): void {
-    const dialogRef = this.dialog.open(ModalClientesComponent, {
+    const dialogRef = this.dialog.open(ModalGastosComponent, {
       width: '30rem',
       data: {
         view: this.view,
@@ -139,26 +130,23 @@ export class ClientesComponent implements OnInit, AfterViewInit {
     this.updateId = id;
     this.detail = {};
     this.view = 'UPDATE'
-    this.service.get(`/client/detail/${id}/`).subscribe(
+    this.service.get(`/expenses/detail/${id}/`).subscribe(
       (res:any) => {
         console.log(res)
         this.detail['name'] = res.name
-        this.detail['last_name'] = res.last_name
-        this.detail['identification'] = res.identification
-        this.detail['email'] = res.email
-        this.detail['phone'] = res.phone
+        this.detail['description'] = res.description
+        this.detail['cost'] = res.cost
         
         this.form.setValue(this.detail)
         this.openDialog()
       }
     )
   }
-
+    
   searchFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
-
 
   // ALERTS
   openSnackBar(message: string, action: string) {

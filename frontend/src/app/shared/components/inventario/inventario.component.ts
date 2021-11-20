@@ -103,7 +103,7 @@ export class InventarioComponent implements OnInit, AfterViewInit {
 
   delete(id: number, name: string) {
     swal.fire({
-      icon: 'question',
+      icon: 'warning',
       title: `Desea borrar el prodcuto #${id} ${name} ?`,
       showConfirmButton: false,
       showDenyButton: true,

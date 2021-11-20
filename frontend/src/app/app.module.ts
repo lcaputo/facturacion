@@ -39,6 +39,11 @@ import { ModalClientesComponent } from './shared/components/clientes/modal/modal
 import { InventarioComponent } from './shared/components/inventario/inventario.component';
 import { ModalInventarioComponent } from './shared/components/inventario/modal/modal-inventario.component';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import { MatTabsModule } from '@angular/material/tabs';
+import { GastosComponent } from './shared/components/gastos/gastos.component';
+import { ModalGastosComponent } from './shared/components/gastos/modal/modal-gastos.component';
+import { ModalFacturacionComponent } from './shared/components/facturacion/modal/modal-facturacion.component';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 
 @NgModule({
@@ -48,6 +53,7 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
     RegisterComponent,
     DashboardComponent,
     FacturacionComponent,
+    ModalFacturacionComponent,
     NavigationComponent,
     EmpleadosComponent,
     ModalEmpleadosComponent,
@@ -57,6 +63,8 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
     ModalClientesComponent,
     InventarioComponent,
     ModalInventarioComponent,
+    GastosComponent,
+    ModalGastosComponent,
   ],
   imports: [
     BrowserModule,
@@ -85,7 +93,8 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
     MatSelectModule,
     ServiciosModule,
     MatAutocompleteModule,
-
+    MatTabsModule,
+    NgSelectModule,
   ],
   providers: [AuthGuardService],
   bootstrap: [AppComponent]
