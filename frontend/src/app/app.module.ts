@@ -45,7 +45,6 @@ import { ModalGastosComponent } from './shared/components/gastos/modal/modal-gas
 import { ModalFacturacionComponent } from './shared/components/facturacion/modal/modal-facturacion.component';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { EcoFabSpeedDialModule } from '@ecodev/fab-speed-dial';
 import { ProductosComponent } from './shared/components/productos/productos.component';
 import { ModalProductosComponent } from './shared/components/productos/modal/modal-productos.component';
 import { CategoriasComponent } from './shared/components/categorias/categorias.component';
@@ -110,7 +109,6 @@ import { ModalProveedoresComponent } from './shared/components/proveedores/modal
     MatTabsModule,
     NgSelectModule,
     MatCheckboxModule,
-    EcoFabSpeedDialModule,
   ],
   providers: [AuthGuardService],
   bootstrap: [AppComponent]
