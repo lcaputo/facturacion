@@ -12,7 +12,7 @@ class Category(BaseModel):
 class Supplier(BaseModel):
     name = models.CharField(max_length=60)
     email = models.EmailField(blank=True, null=True)
-    phone = models.IntegerField(blank=True, null=True)
+    phone = models.BigIntegerField(blank=True, null=True)
 
 
 class Product(BaseModel):

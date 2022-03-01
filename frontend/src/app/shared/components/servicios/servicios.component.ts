@@ -108,7 +108,8 @@ export class ServiciosComponent implements OnInit, AfterViewInit {
 
   openDialog(): void {
     const dialogRef = this.dialog.open(ModalServiciosComponent, {
-      width: '30rem',
+      maxWidth: '98vw',
+      width: '40rem',
       data: {
         view: this.view,
         form: this.form,

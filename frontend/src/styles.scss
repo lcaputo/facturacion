@@ -14,23 +14,33 @@ body {
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
+form[autocomplete="off"] input[type="text"] {
+  background-position: 150% 50% !important;
+}
 
 .ng-select-container {
   background-color: rgba(0,0,0,.04);
 }
 
 .ng-select-container .ng-value {
-  margin-top: 4%;
-}
-
-.ng-select-container .ng-value-container {
-  margin-left: 6%; 
-}
-
-.ng-select-container .ng-value-container div input {
-  padding: 0% 6% !important;
+  margin-top: .420em;
+  margin-left: .620em;
 }
 
 .ng-select-container .ng-placeholder {
-  margin-top: 3%;
+  margin-top: .420em;
+  margin-left: .420em;
+}
+
+.ng-select-container .ng-value-container div input {
+  padding: 0 .420em !important;
+}
+
+
+.ng-select .ng-select-container {
+  min-height: 20px;
+}
+
+.ng-select.ng-select-single .ng-select-container {
+  height: 3.7em;
 }

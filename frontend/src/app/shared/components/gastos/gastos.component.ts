@@ -112,7 +112,8 @@ export class GastosComponent implements OnInit, AfterViewInit {
 
   openDialog(): void {
     const dialogRef = this.dialog.open(ModalGastosComponent, {
-      width: '30rem',
+      maxWidth: '98vw',
+      width: '40rem',
       data: {
         view: this.view,
         form: this.form,

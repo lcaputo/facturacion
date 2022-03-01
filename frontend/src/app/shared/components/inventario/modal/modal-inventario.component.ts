@@ -53,12 +53,7 @@ export class ModalInventarioComponent implements OnInit {
   getSuppliers() {
     this.service.get('/product/supplier/').subscribe(
       (res:any) => {
-        console.log('response', res);
-        this.options = res
-        this.filteredOptions = this.searchSuppliers.valueChanges.pipe(
-          startWith(''),
-          map(value => this._filter(value)),
-        );
+        this.suppliers = res
       },
       (err:any) => {
         

@@ -44,6 +44,14 @@ import { GastosComponent } from './shared/components/gastos/gastos.component';
 import { ModalGastosComponent } from './shared/components/gastos/modal/modal-gastos.component';
 import { ModalFacturacionComponent } from './shared/components/facturacion/modal/modal-facturacion.component';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { EcoFabSpeedDialModule } from '@ecodev/fab-speed-dial';
+import { ProductosComponent } from './shared/components/productos/productos.component';
+import { ModalProductosComponent } from './shared/components/productos/modal/modal-productos.component';
+import { CategoriasComponent } from './shared/components/categorias/categorias.component';
+import { ModalCategoriasComponent } from './shared/components/categorias/modal/modal-categorias.component';
+import { ProveedoresComponent } from './shared/components/proveedores/proveedores.component';
+import { ModalProveedoresComponent } from './shared/components/proveedores/modal/modal-proveedores.component';
 
 
 @NgModule({
@@ -65,6 +73,12 @@ import { NgSelectModule } from '@ng-select/ng-select';
     ModalInventarioComponent,
     GastosComponent,
     ModalGastosComponent,
+    ProductosComponent,
+    ModalProductosComponent,
+    CategoriasComponent,
+    ModalCategoriasComponent,
+    ProveedoresComponent,
+    ModalProveedoresComponent,
   ],
   imports: [
     BrowserModule,
@@ -95,6 +109,8 @@ import { NgSelectModule } from '@ng-select/ng-select';
     MatAutocompleteModule,
     MatTabsModule,
     NgSelectModule,
+    MatCheckboxModule,
+    EcoFabSpeedDialModule,
   ],
   providers: [AuthGuardService],
   bootstrap: [AppComponent]

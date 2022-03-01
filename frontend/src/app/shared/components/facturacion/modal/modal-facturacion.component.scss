@@ -1,3 +1,29 @@
 .mat-dialog-actions {
     justify-content: right;
 }
+
+.mat-dialog-content {
+    height: 32rem !important;
+    max-height: 32rem !important;
+}
+
+.mat-form-field-wrapper {
+    padding-bottom: 0 !important;
+}
+
+tr.mat-header-row {
+    height: 25px;
+}
+
+.lista-facturacion {
+    overflow-y: scroll; 
+    height:15.9em;
+}
+
+.ng-select {
+    padding: 0;
+}
+
+.mat-dialog-actions {
+    padding: 0;
+}

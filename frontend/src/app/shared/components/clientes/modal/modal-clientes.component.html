@@ -1,5 +1,6 @@
 <form [formGroup]="data.form" 
-(ngSubmit)="submit()">
+(ngSubmit)="submit()"
+autocomplete="off">
 
 
 <h1 mat-dialog-title>
@@ -19,13 +20,13 @@
                     <div class="col-6">
                         <mat-form-field class="w-100" appearance="fill">
                             <mat-label>Nombre</mat-label>
-                            <input matInput placeholder="Ej. Juan" formControlName="name">
+                            <input matInput placeholder="Ej. Juan" formControlName="name" data-lpignore="true">
                         </mat-form-field>
                     </div>
                     <div class="col-6">
                         <mat-form-field class="w-100" appearance="fill">
                             <mat-label>Apellido</mat-label>
-                            <input matInput placeholder="Ej. Perez" formControlName="last_name">
+                            <input matInput placeholder="Ej. Perez" formControlName="last_name" data-lpignore="true">
                         </mat-form-field>
                     </div>
                     <div class="col-6">
@@ -38,7 +39,7 @@
                     <div class="col-6">
                         <mat-form-field class="w-100" appearance="fill">
                             <mat-label>Correo Electrónico</mat-label>
-                            <input matInput placeholder="Ej. juan@gmail.com" type="email" formControlName="email">
+                            <input matInput placeholder="Ej. juan@gmail.com" type="email" formControlName="email" data-lpignore="true">
                         </mat-form-field>
                     </div>
                     <div class="col-6">

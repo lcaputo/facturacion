@@ -1,15 +1,36 @@
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { OnInit, Inject, Component } from '@angular/core';
+import { OnInit, Inject, Component, ViewChild } from '@angular/core';
 import { AppService } from 'src/app/services/app.service';
 import swal from 'sweetalert2';
 import { map, Observable, startWith } from 'rxjs';
+import { MatSort } from '@angular/material/sort';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 export interface DialogData {
   view        : string;
   form        : FormGroup;
   list        : any,
   updateId    : number,
+}
+
+export interface Product {
+  id                        : number;
+  name                      : string;
+  supplier                  : number;
+  description               : string;
+  purchase_price            : number;
+  sale_price                : number;
+  stock                     : number;
+  category                  : number;
+}
+
+export interface Service {
+  id                        : number;
+  name                      : string;
+  price                     : number;
 }
 
 @Component({
@@ -30,15 +51,31 @@ export class ModalFacturacionComponent implements OnInit {
   public filteredClientsOptions: Observable<any[]>
   public clientsOptions: { id: number; name: string }[]
 
+  productsDataSource = new MatTableDataSource();
+  productsDisplayedColumns: string[] = ['id', 'name', 'category', 'supplier', 'stock', 'description'];
+  @ViewChild('products-table') productsort!: MatSort;
+  @ViewChild('products-paginator') productpaginator!: MatPaginator;
+
+  servicesDataSource = new MatTableDataSource();
+  servicesDisplayedColumns: string[] = ['id', 'name', 'price'];
+  @ViewChild('services-table') servicesort!: MatSort;
+  @ViewChild('services-paginator') servicepaginator!: MatPaginator;
+
+  public serviceSearch  : string = '';
+  public productSearch  : string = '';
+
   constructor(
     public dialogRef: MatDialogRef<ModalFacturacionComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
     private service: AppService,
+    private _snackBar: MatSnackBar,
   ) {}
   
   ngOnInit(): void {
     this.getEmployee();
     this.getClients();
+    this.listProducts();
+    this.listServices();
   }
 
   private _employeesFilter(value: string): any[] {
@@ -125,11 +162,6 @@ export class ModalFacturacionComponent implements OnInit {
     this.service.get('/employee/').subscribe(
       (res:any) => {
         this.employees = res
-        /* this.employeesOptions = res
-        this.filteredEmployeesOptions = this.searchEmployees.valueChanges.pipe(
-          startWith(''),
-          map(value => this._employeesFilter(value)),
-        ); */
       },
       (err:any) => {
         
@@ -141,11 +173,6 @@ export class ModalFacturacionComponent implements OnInit {
     this.service.get('/client/').subscribe(
       (res:any) => {
         this.clients = res
-        // this.clientsOptions = res
-        // this.filteredClientsOptions = this.searchClients.valueChanges.pipe(
-        //   startWith(''),
-        //   map(value => this._clientsFilter(value)),
-        // );
       },
       (err:any) => {
         
@@ -153,6 +180,46 @@ export class ModalFacturacionComponent implements OnInit {
     )
   }
 
+  // ALERTS
+  openSnackBar(message: string, action: string) {
+    this._snackBar.open(message, action);
+  }
 
+  listProducts() {
+    this.loading = true;
+    this.service.get('/product/').subscribe(
+      (res:any) => {
+        console.log(res);
+        this.productsDataSource.data = res as Product[];
+        this.loading = false;
+      },
+      (err:any) =>{
+        console.log('Error', err)
+        this.openSnackBar('Error al consultar el inventario', 'ok')
+        this.loading = false;
+      }
+    )
+  }
+  
+  listServices() {
+    this.loading = true;
+    this.service.get('/service/').subscribe(
+      (res:any) => {
+        console.log(res);
+        this.servicesDataSource.data = res as Service[];
+        this.loading = false;
+      },
+      (err:any) =>{
+        console.log('Error', err)
+        this.openSnackBar('Error al consultar los servicios', 'ok')
+        this.loading = false;
+      }
+    )
+  }
+
+  servicesSearchFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.servicesDataSource.filter = filterValue.trim().toLowerCase();
+  }
 
 }

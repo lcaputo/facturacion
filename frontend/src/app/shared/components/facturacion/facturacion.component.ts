@@ -132,7 +132,11 @@ export class FacturacionComponent implements OnInit, AfterViewInit {
 
   openDialog(): void {
     const dialogRef = this.dialog.open(ModalFacturacionComponent, {
-      width: '30rem',
+      maxWidth: '98vw',
+      maxHeight: '98vh',
+      height: 'auto',
+      width: '100%',
+      panelClass: 'full-screen-modal',
       data: {
         view: this.view,
         form: this.form,

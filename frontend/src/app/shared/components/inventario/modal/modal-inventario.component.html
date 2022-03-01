@@ -1,5 +1,7 @@
 <form [formGroup]="data.form" 
-(ngSubmit)="submit()">
+(ngSubmit)="submit()"
+autocomplete="off"
+data-lpignore="true">
 
 
 <h1 mat-dialog-title>
@@ -23,21 +25,15 @@
                         </mat-form-field>
                     </div>
                     <div class="col-6">
-                        <mat-form-field class="example-full-width" appearance="fill">
-                            <mat-label>Proveedor</mat-label>
-                            <input type="text"
-                                   placeholder="Seleccionar"
-                                   aria-label="Proveedor"
-                                   matInput
-                                   formControlName="supplier"
-                                   [formControl]="searchSuppliers"
-                                   [matAutocomplete]="auto">
-                            <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" [displayWith]="displayFn" >
-                              <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
-                                {{option.name}}
-                              </mat-option>
-                            </mat-autocomplete>
-                          </mat-form-field>
+                        <ng-select
+                            [items]="suppliers"
+                            bindLabel="name"
+                            bindValue="id"
+                            formControlName="supplier"
+                            placeholder="Proveedor"
+                            appendTo="body"
+                        >
+                        </ng-select>
                     </div>
                     <div class="col-12">
                         <mat-form-field class="w-100" appearance="fill">
