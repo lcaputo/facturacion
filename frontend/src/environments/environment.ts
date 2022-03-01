@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  API_URL: 'https://facturacion.og23.co:8000/api/v1',
+  API_URL: 'http://137.184.192.104:8000/api/v1',
 };
 
 /*
